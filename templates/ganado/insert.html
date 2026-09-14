@@ -1,0 +1,122 @@
+{% extends "base.html" %} 
+{% block title %}Nuevo Registro de Ganado{% endblock %} 
+
+{% block content %}
+<div class="container py-4 animate-fade-in">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <form method="POST" action="{{ url_for('ganado_insert') }}">
+        
+        <!-- Sección 1: Identificación -->
+        <div class="glass-card p-4 mb-4">
+          <h4 class="fw-bold mb-3 text-primary"><i class="bi bi-tag-fill me-2"></i>Identificación Básica</h4>
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label class="form-label fw-semibold">Número de Arete *</label>
+              <input type="text" name="arete" class="form-control bg-dark text-light border-secondary" placeholder="Ej: A-001" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold">Sexo</label>
+              <select name="sexo" class="form-select bg-dark text-light border-secondary" required>
+                <option value="Macho">Macho</option>
+                <option value="Hembra">Hembra</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold">Raza</label>
+              <input type="text" name="raza" class="form-control bg-dark text-light border-secondary" placeholder="Ej: Angus, Brahman">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold">Fecha de Ingreso</label>
+              <input type="date" name="fecha_ingreso" class="form-control bg-dark text-light border-secondary" value="{{ now().date()|string }}" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-semibold">Edad (meses)</label>
+              <input type="number" name="edad_meses" class="form-control bg-dark text-light border-secondary" placeholder="Ej: 12">
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección 2: Pesos y Ubicación -->
+        <div class="glass-card p-4 mb-4">
+          <h4 class="fw-bold mb-3 text-success"><i class="bi bi-bar-chart-line-fill me-2"></i>Pesos y Ubicación</h4>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Peso Inicial (kg)</label>
+              <input type="number" step="0.01" name="peso_inicial_kg" class="form-control bg-dark text-light border-secondary" placeholder="0.00">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Peso Actual (kg)</label>
+              <input type="number" step="0.01" name="peso_actual_kg" class="form-control bg-dark text-light border-secondary" placeholder="0.00" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Potrero Actual</label>
+              <input type="text" name="potrero_actual" class="form-control bg-dark text-light border-secondary" placeholder="Ej: Potrero Norte">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Tipo de Alimentación</label>
+              <input type="text" name="alimentacion" class="form-control bg-dark text-light border-secondary" placeholder="Ej: Pastoreo, Suplemento">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Proveedor / Origen</label>
+              <input type="text" name="proveedor" class="form-control bg-dark text-light border-secondary" placeholder="Nombre del proveedor">
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección 3: Comercialización y Estado -->
+        <div class="glass-card p-4 mb-4">
+          <h4 class="fw-bold mb-3 text-warning"><i class="bi bi-cash-stack me-2"></i>Comercialización y Estado</h4>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Estado</label>
+              <select name="estado" class="form-select bg-dark text-light border-secondary">
+                <option value="En Engorda" selected>En Engorda</option>
+                <option value="Listo para Venta">Listo para Venta</option>
+                <option value="Vendido">Vendido</option>
+                <option value="Baja">Baja</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Destino (Carne/Leche)</label>
+              <select name="destino_carne" class="form-select bg-dark text-light border-secondary">
+                <option value="Carne">Carne</option>
+                <option value="Leche">Leche</option>
+                <option value="Cría">Cría</option>
+                <option value="Doble Propósito">Doble Propósito</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Peso Canal (kg)</label>
+              <input type="number" step="0.01" name="peso_canal" class="form-control bg-dark text-light border-secondary" placeholder="Opcional">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Precio Venta Unitario ($)</label>
+              <input type="number" step="0.01" name="precio_venta" class="form-control bg-dark text-light border-secondary" placeholder="0.00">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Valor Total ($)</label>
+              <input type="number" step="0.01" name="valor_total" class="form-control bg-dark text-light border-secondary" placeholder="0.00">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Fecha de Venta</label>
+              <input type="date" name="fecha_venta" class="form-control bg-dark text-light border-secondary">
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="d-flex justify-content-between gap-3">
+          <a href="{{ url_for('ganado_list') }}" class="btn btn-outline-secondary btn-lg flex-grow-1">
+            <i class="bi bi-x-circle me-2"></i>Cancelar
+          </a>
+          <button type="submit" class="btn btn-primary btn-lg flex-grow-1 shadow-sm">
+            <i class="bi bi-check-circle-fill me-2"></i>Guardar Registro
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

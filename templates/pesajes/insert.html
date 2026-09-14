@@ -1,0 +1,74 @@
+{% extends "base.html" %} 
+{% block title %}Nuevo Pesaje{% endblock %} 
+
+{% block content %}
+<div class="container py-4 animate-fade-in">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-card p-4 p-md-5">
+        <h2 class="mb-4 fw-bold text-center">
+          <i class="bi bi-speedometer2 text-info me-2"></i> Registrar Pesaje
+        </h2>
+
+        <!-- Aviso informativo -->
+        <div class="alert alert-info border-0 mb-4" style="background: rgba(14, 165, 233, 0.1); color: #7dd3fc;">
+          <i class="bi bi-info-circle-fill me-2"></i>
+          El <strong>incremento de peso</strong> se calculará automáticamente comparando con el último pesaje registrado del animal.
+        </div>
+
+        <form method="POST" action="{{ url_for('pesajes_insert') }}">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label for="arete" class="form-label fw-semibold">Arete del Animal *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-tag-fill"></i>
+                </span>
+                <select name="arete" id="arete" class="form-select bg-dark text-light border-secondary" required>
+                  <option value="">-- Selecciona un animal --</option>
+                  {% for a in animales %}
+                  <option value="{{ a['arete'] }}">{{ a['arete'] }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="peso_kg" class="form-label fw-semibold">Peso Actual (kg) *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-bar-chart-line-fill"></i>
+                </span>
+                <input type="number" step="0.01" min="0" class="form-control bg-dark text-light border-secondary" id="peso_kg" name="peso_kg" placeholder="Ej: 450.50" required>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="fecha_medicion" class="form-label fw-semibold">Fecha de Medición *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-calendar-event"></i>
+                </span>
+                <input type="date" class="form-control bg-dark text-light border-secondary" id="fecha_medicion" name="fecha_medicion" value="{{ now().date()|string }}" required>
+              </div>
+            </div>
+
+            <div class="col-12 d-flex align-items-end">
+              <div class="w-100">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <a href="{{ url_for('pesajes_list') }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                  </a>
+                  <button type="submit" class="btn btn-info btn-lg text-dark fw-bold">
+                    <i class="bi bi-check-circle-fill me-2"></i>Guardar Pesaje
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,266 @@
+{% extends "base.html" %} 
+{% block title %}Dashboard - Technova{% endblock %} 
+
+{% block content %}
+<div class="animate-fade-in">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="fw-bold mb-1">Dashboard General</h1>
+      <p class="text-muted mb-0">Métricas coherentes y en tiempo real de la operación</p>
+    </div>
+    <div class="text-end">
+      <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 px-3 py-2">
+        <i class="bi bi-circle-fill text-success me-2" style="font-size: 8px;"></i> Sistema Activo
+      </span>
+    </div>
+  </div>
+
+  <!-- TARJETAS DE MÉTRICAS (Resumen rápido) -->
+  <div class="row g-4 mb-5">
+    <div class="col-md-6 col-xl-3">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted text-uppercase small fw-bold mb-1">Total Ganado</p>
+            <h2 class="fw-bold mb-0">{{ total_all }}</h2>
+            <small class="text-success"><i class="bi bi-arrow-up-short"></i> Cabezas registradas</small>
+          </div>
+          <div class="p-3 rounded-3" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">
+            <i class="bi bi-people-fill fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted text-uppercase small fw-bold mb-1">Listos para Venta</p>
+            <h2 class="fw-bold mb-0">{{ listoventa }}</h2>
+            <small class="text-warning"><i class="bi bi-clock"></i> En condición óptima</small>
+          </div>
+          <div class="p-3 rounded-3" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">
+            <i class="bi bi-cart-check-fill fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted text-uppercase small fw-bold mb-1">Ingresos Totales</p>
+            <h2 class="fw-bold mb-0">${{ format_number(ingresos) }}</h2>
+            <small class="text-success"><i class="bi bi-arrow-up-short"></i> Acumulado histórico</small>
+          </div>
+          <div class="p-3 rounded-3" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+            <i class="bi bi-cash-stack fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <p class="text-muted text-uppercase small fw-bold mb-1">KG en Inventario</p>
+            <h2 class="fw-bold mb-0">{{ total_kg }}</h2>
+            <small class="text-info"><i class="bi bi-box-seam"></i> Peso total insumos</small>
+          </div>
+          <div class="p-3 rounded-3" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa;">
+            <i class="bi bi-bar-chart-line-fill fs-3"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRÁFICAS COHERENTES -->
+  <div class="row g-4 mb-5">
+    <!-- Gráfica 1: Estado del Rebaño (Dona) -->
+    <div class="col-lg-5">
+      <div class="glass-card p-4 h-100">
+        <h5 class="fw-bold mb-4"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>Estado del Rebaño</h5>
+        <div style="position: relative; height: 320px; display: flex; justify-content: center;">
+          <canvas id="graficoEstado"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfica 2: Distribución por Potrero (Barras Horizontales) -->
+    <div class="col-lg-7">
+      <div class="glass-card p-4 h-100">
+        <h5 class="fw-bold mb-4"><i class="bi bi-bar-chart-steps me-2 text-success"></i>Carga de Ganado por Potrero</h5>
+        <div style="position: relative; height: 320px;">
+          <canvas id="graficoPotrero"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA DE DETALLE -->
+  <div class="glass-card p-4 animate-fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="fw-bold mb-0"><i class="bi bi-table me-2 text-info"></i>Detalle por Potrero</h5>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle mb-0" style="--bs-table-bg: transparent;">
+        <thead>
+          <tr class="text-muted text-uppercase small">
+            <th class="border-0 py-3">Nombre del Potrero</th>
+            <th class="border-0 py-3 text-end">Cantidad de Animales</th>
+            <th class="border-0 py-3 text-end">Porcentaje del Rebaño</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in por_potrero %}
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td class="py-3 fw-semibold">
+              <i class="bi bi-geo-alt-fill text-success me-2"></i>{{ row['potrero_actual'] or 'Sin Asignar' }}
+            </td>
+            <td class="py-3 text-end">
+              <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill">
+                {{ row['cnt'] }} cabezas
+              </span>
+            </td>
+            <td class="py-3 text-end">
+              <div class="progress" style="height: 6px; width: 100px; margin-left: auto; background: rgba(255,255,255,0.1);">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ (row['cnt'] / total_all * 100) if total_all > 0 else 0 }}%"></div>
+              </div>
+              <small class="text-muted d-block text-end mt-1">{{ "%.1f"|format(row['cnt'] / total_all * 100) if total_all > 0 else 0 }}%</small>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="3" class="text-center py-4 text-muted">
+              <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+              No hay datos de potreros registrados
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Configuración global para modo oscuro
+  Chart.defaults.color = '#94a3b8';
+  Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.06)';
+  Chart.defaults.font.family = "'Inter', sans-serif";
+
+  // ===== GRÁFICA 1: ESTADO DEL REBAÑO (Dona) =====
+  const ctxEstado = document.getElementById('graficoEstado').getContext('2d');
+  
+  // Datos desde Python
+  const estadosLabels = [{% for e in por_estado %}"{{ e['estado'] or 'Sin Estado' }}",{% endfor %}];
+  const estadosData = [{% for e in por_estado %}{{ e['cnt'] }},{% endfor %}];
+
+  // Colores coherentes por estado
+  const coloresEstado = estadosLabels.map(label => {
+    const l = label.toLowerCase();
+    if (l.includes('engorda')) return '#3b82f6';      // Azul
+    if (l.includes('venta')) return '#10b981';        // Verde
+    if (l.includes('vendido')) return '#64748b';      // Gris
+    if (l.includes('baja')) return '#ef4444';         // Rojo
+    return '#8b5cf6';                                 // Morado (default)
+  });
+
+  new Chart(ctxEstado, {
+    type: 'doughnut',
+    data: {
+      labels: estadosLabels,
+      datasets: [{
+        data: estadosData,
+        backgroundColor: coloresEstado,
+        borderColor: '#0f172a',
+        borderWidth: 3,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { padding: 15, usePointStyle: true, pointStyle: 'rectRounded' }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.95)',
+          padding: 12,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              let label = context.label || '';
+              let value = context.parsed;
+              let total = context.dataset.data.reduce((a, b) => a + b, 0);
+              let percentage = ((value / total) * 100).toFixed(1);
+              return ` ${label}: ${value} cabezas (${percentage}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // ===== GRÁFICA 2: CARGA POR POTRERO (Barras Horizontales) =====
+  const ctxPotrero = document.getElementById('graficoPotrero').getContext('2d');
+  
+  const labelsPotrero = [{% for row in por_potrero %}"{{ row['potrero_actual'] or 'Sin Asignar' }}",{% endfor %}];
+  const dataPotrero = [{% for row in por_potrero %}{{ row['cnt'] }},{% endfor %}];
+
+  new Chart(ctxPotrero, {
+    type: 'bar',
+    data: {
+      labels: labelsPotrero,
+      datasets: [{
+        label: 'Cabezas de Ganado',
+        data: dataPotrero,
+        backgroundColor: 'rgba(59, 130, 246, 0.7)',
+        borderColor: '#60a5fa',
+        borderWidth: 1,
+        borderRadius: 6,
+        barThickness: 20 // Barras más delgadas y elegantes
+      }]
+    },
+    options: {
+      indexAxis: 'y', // ✅ ESTO HACE QUE LAS BARRAS SEAN HORIZONTALES (Mucho más legible)
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.95)',
+          padding: 12,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              return ` ${context.parsed.x} cabezas`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          grid: { color: 'rgba(255, 255, 255, 0.05)' },
+          ticks: { stepSize: 1 }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { font: { weight: '600' } }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %} 
+{% block title %}Historial de Vacunación{% endblock %} 
+
+{% block content %}
+<div class="container py-4 animate-fade-in">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="bi bi-shield-plus text-purple me-2" style="color: #a78bfa;"></i>Historial de Vacunación</h2>
+      <p class="text-muted mb-0">Control sanitario y aplicación de medicamentos al ganado</p>
+    </div>
+    <a href="{{ url_for('vacunacion_insert') }}" class="btn btn-lg shadow-sm" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border: none;">
+      <i class="bi bi-plus-circle-fill me-2"></i> Nueva Vacunación
+    </a>
+  </div>
+
+  <!-- Buscador Client-side -->
+  <div class="glass-card p-3 mb-4">
+    <div class="input-group">
+      <span class="input-group-text bg-transparent border-secondary text-secondary">
+        <i class="bi bi-search"></i>
+      </span>
+      <input type="text" id="buscadorVacunacion" class="form-control bg-transparent text-light border-secondary" placeholder="Buscar por arete, medicamento, fecha u observaciones...">
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="glass-card p-0 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle mb-0" id="tablaVacunacion" style="--bs-table-bg: transparent;">
+        <thead>
+          <tr class="text-muted text-uppercase small">
+            <th class="border-0 py-3 ps-4">ID</th>
+            <th class="border-0 py-3">Arete</th>
+            <th class="border-0 py-3">Medicamento</th>
+            <th class="border-0 py-3">Fecha</th>
+            <th class="border-0 py-3 text-center">Dosis</th>
+            <th class="border-0 py-3">Observaciones</th>
+            <th class="border-0 py-3 text-end pe-4">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in data %}
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td class="py-3 ps-4 text-muted">#{{ v['id'] }}</td>
+            <td class="py-3 fw-bold text-light">
+              <i class="bi bi-tag-fill me-2" style="color: #a78bfa;"></i>{{ v['arete'] }}
+            </td>
+            <td class="py-3">
+              <span class="badge px-3 py-2 rounded-pill" style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.3);">
+                <i class="bi bi-shield-check me-1"></i>{{ v['medicamento'] or 'Sin especificar' }}
+              </span>
+            </td>
+            <td class="py-3 text-light">
+              <i class="bi bi-calendar-event text-secondary me-2"></i>{{ v['fecha'] }}
+              {% if v['fecha'] %}
+                {% set dias_diff = (now().date() - v['fecha']|string|to_datetime).days if v['fecha']|string|length > 0 else 999 %}
+                {% if dias_diff <= 30 %}
+                  <span class="badge bg-success bg-opacity-25 text-success ms-2 small">Reciente</span>
+                {% elif dias_diff > 180 %}
+                  <span class="badge bg-danger bg-opacity-25 text-danger ms-2 small">Antiguo</span>
+                {% endif %}
+              {% endif %}
+            </td>
+            <td class="py-3 text-center">
+              <span class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 px-3 py-2 rounded-pill">
+                {{ v['dosis'] or '—' }}
+              </span>
+            </td>
+            <td class="py-3 text-muted small" style="max-width: 200px;">
+              {{ v['observaciones'] or '—' }}
+            </td>
+            <td class="py-3 text-end pe-4">
+              <div class="btn-group" role="group">
+                <a href="{{ url_for('vacunacion_update', id=v['id']) }}" class="btn btn-sm btn-outline-warning" title="Editar">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                <form action="{{ url_for('vacunacion_delete', id=v['id']) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('¿Estás seguro de eliminar este registro de vacunación?');">
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" class="text-center py-5 text-muted">
+              <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
+              <p class="mb-0">No hay registros de vacunación en el sistema.</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Búsqueda en tiempo real
+  document.getElementById('buscadorVacunacion').addEventListener('keyup', function() {
+    const filtro = this.value.toLowerCase();
+    document.querySelectorAll('#tablaVacunacion tbody tr').forEach(function(fila) {
+      const texto = fila.textContent.toLowerCase();
+      fila.style.display = texto.includes(filtro) ? '' : 'none';
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Editar Usuario{% endblock %}
+
+{% block content %}
+<div class="container py-4 animate-fade-in">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-card p-4 p-md-5">
+        <h2 class="mb-4 fw-bold text-center">
+          <i class="bi bi-person-gear text-warning me-2"></i> Editar Usuario
+        </h2>
+
+        <div class="alert alert-danger border-0 mb-4" style="background: rgba(239, 68, 68, 0.1); color: #fca5a5;">
+          <i class="bi bi-shield-lock-fill me-2"></i>
+          Se requieren <strong>credenciales maestras</strong> para modificar este usuario.
+        </div>
+
+        <form method="POST" action="{{ url_for('admin_users_edit', id=user['id']) }}">
+          <div class="row g-4">
+            <!-- 🔐 Credenciales maestras -->
+            <div class="col-12">
+              <div class="p-3 rounded-3" style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2);">
+                <h6 class="text-danger mb-3"><i class="bi bi-key-fill me-2"></i>Autorización Maestra</h6>
+                <div class="row g-2">
+                  <div class="col-md-6">
+                    <input type="text" name="master_user" class="form-control bg-dark text-light border-secondary" placeholder="Usuario maestro (Diego)" required autocomplete="off">
+                  </div>
+                  <div class="col-md-6">
+                    <input type="password" name="master_pass" class="form-control bg-dark text-light border-secondary" placeholder="Clave maestra" required autocomplete="off">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="username" class="form-label fw-semibold">Nombre de Usuario *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-at"></i>
+                </span>
+                <input type="text" class="form-control bg-dark text-light border-secondary" id="username" name="username" value="{{ user['username'] }}" required>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="nombre_completo" class="form-label fw-semibold">Nombre Completo</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-person-badge-fill"></i>
+                </span>
+                <input type="text" class="form-control bg-dark text-light border-secondary" id="nombre_completo" name="nombre_completo" value="{{ user['nombre_completo'] or '' }}">
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="new_password" class="form-label fw-semibold">Nueva Contraseña (opcional)</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-shield-lock-fill"></i>
+                </span>
+                <input type="password" class="form-control bg-dark text-light border-secondary" id="new_password" name="new_password" placeholder="Dejar vacío para no cambiar">
+              </div>
+              <small class="text-muted">Mínimo 6 caracteres</small>
+            </div>
+
+            <div class="col-12 d-flex align-items-end">
+              <div class="w-100">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <a href="{{ url_for('admin_users') }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                  </a>
+                  <button type="submit" class="btn btn-warning btn-lg text-dark fw-bold">
+                    <i class="bi bi-check-circle-fill me-2"></i>Actualizar Usuario
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

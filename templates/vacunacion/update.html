@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Editar Pesaje{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4 text-primary"><i class="bi bi-pencil-square"></i> Editar Pesaje</h2>
+
+  <form method="POST" action="{{ url_for('pesajes_update', id=registro['id']) }}" class="shadow p-4 rounded bg-light">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Arete</label>
+        <select name="arete" class="form-select" required>
+          <option value="">-- Selecciona arete --</option>
+          {% for a in animales %}
+            <option value="{{ a['arete'] }}" {% if a['arete']==registro['arete'] %}selected{% endif %}>{{ a['arete'] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Peso (kg)</label>
+        <input type="number" step="0.01" name="peso_kg" class="form-control" value="{{ registro['peso_kg'] }}" required>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Fecha</label>
+        <input type="date" name="fecha_medicion" class="form-control" value="{{ registro['fecha_medicion'] }}" required>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Observaciones</label>
+        <input type="text" name="observaciones" class="form-control" value="{{ registro['observaciones'] }}">
+      </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-between">
+      <a href="{{ url_for('pesajes_list') }}" class="btn btn-secondary">Cancelar</a>
+      <button type="submit" class="btn btn-primary">Actualizar</button>
+    </div>
+  </form>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}

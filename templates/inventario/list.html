@@ -1,0 +1,85 @@
+{% extends "base.html" %} 
+{% block title %}Inventario{% endblock %} 
+
+{% block content %}
+<div class="container py-4 animate-fade-in">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="bi bi-box-seam-fill text-success me-2"></i>Inventario de Insumos</h2>
+      <p class="text-muted mb-0">Gestiona los ingredientes y cantidades disponibles</p>
+    </div>
+    <a href="{{ url_for('inventario_insert') }}" class="btn btn-success btn-lg shadow-sm">
+      <i class="bi bi-plus-circle-fill me-2"></i> Nuevo Ingrediente
+    </a>
+  </div>
+
+  <!-- Buscador (Server-side) -->
+  <div class="glass-card p-3 mb-4">
+    <form method="GET" action="{{ url_for('inventario_list') }}" class="d-flex gap-2">
+      <div class="input-group w-100">
+        <span class="input-group-text bg-transparent border-secondary text-secondary">
+          <i class="bi bi-search"></i>
+        </span>
+        <input type="text" name="search" class="form-control bg-transparent text-light border-secondary" placeholder="Buscar por nombre de ingrediente..." value="{{ search }}">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        {% if search %}
+          <a href="{{ url_for('inventario_list') }}" class="btn btn-outline-secondary">Limpiar</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabla -->
+  <div class="glass-card p-0 overflow-hidden">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle mb-0" style="--bs-table-bg: transparent;">
+        <thead>
+          <tr class="text-muted text-uppercase small">
+            <th class="border-0 py-3 ps-4">ID</th>
+            <th class="border-0 py-3">Ingrediente / Insumo</th>
+            <th class="border-0 py-3 text-end">Cantidad</th>
+            <th class="border-0 py-3 text-center pe-4">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in data %}
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td class="py-3 ps-4 text-muted">#{{ r['id'] }}</td>
+            <td class="py-3 fw-semibold">
+              <i class="bi bi-box-fill text-success me-2"></i>{{ r['ingredientes'] }}
+            </td>
+            <td class="py-3 text-end">
+              <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill fs-6">
+                {{ r['cantidad'] }}
+              </span>
+            </td>
+            <td class="py-3 text-center pe-4">
+              <div class="btn-group" role="group">
+                <a href="{{ url_for('inventario_update', id=r['id']) }}" class="btn btn-sm btn-outline-warning" title="Editar">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                <form action="{{ url_for('inventario_delete', id=r['id']) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('¿Estás seguro de eliminar este ingrediente del inventario?');">
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="4" class="text-center py-5 text-muted">
+              <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
+              <p class="mb-0">No se encontraron registros en el inventario.</p>
+              {% if search %}
+                <small>Intenta con otro término de búsqueda.</small>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

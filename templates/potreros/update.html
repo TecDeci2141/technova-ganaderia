@@ -1,0 +1,101 @@
+{% extends "base.html" %} 
+{% block title %}Editar Vacunación{% endblock %} 
+
+{% block content %}
+<div class="container py-4 animate-fade-in">
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <div class="glass-card p-4 p-md-5">
+        <h2 class="mb-4 fw-bold text-center">
+          <i class="bi bi-pencil-square text-warning me-2"></i> Editar Registro de Vacunación
+        </h2>
+
+        <!-- Aviso informativo -->
+        <div class="alert alert-warning border-0 mb-4" style="background: rgba(245, 158, 11, 0.1); color: #fcd34d;">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          Estás modificando un registro sanitario. Asegúrate de que los datos reflejen <strong>exactamente</strong> lo que ocurrió.
+        </div>
+
+        <form method="POST" action="{{ url_for('vacunacion_update', id=registro['id']) }}">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label for="arete" class="form-label fw-semibold">Animal (Arete) *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-tag-fill"></i>
+                </span>
+                <select name="arete" id="arete" class="form-select bg-dark text-light border-secondary" required>
+                  <option value="">-- Selecciona un animal --</option>
+                  {% for a in animales %}
+                  <option value="{{ a['arete'] }}" {% if a['arete'] == registro['arete'] %}selected{% endif %}>{{ a['arete'] }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="medicamento_id" class="form-label fw-semibold">Medicamento Aplicado *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-capsule-pill"></i>
+                </span>
+                <select name="medicamento_id" id="medicamento_id" class="form-select bg-dark text-light border-secondary" required>
+                  <option value="">-- Selecciona un medicamento --</option>
+                  {% for m in medicamentos %}
+                  <option value="{{ m['id'] }}" {% if m['id'] == registro['medicamento_id'] %}selected{% endif %}>
+                    {{ m['nombre'] }} ({{ m['ingrediente_activo'] or 'N/A' }})
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="fecha" class="form-label fw-semibold">Fecha de Aplicación *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-calendar-event"></i>
+                </span>
+                <input type="date" class="form-control bg-dark text-light border-secondary" id="fecha" name="fecha" value="{{ registro['fecha'] }}" required>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="dosis" class="form-label fw-semibold">Dosis Administrada *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-syringe"></i>
+                </span>
+                <input type="text" class="form-control bg-dark text-light border-secondary" id="dosis" name="dosis" value="{{ registro['dosis'] }}" required>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="observaciones" class="form-label fw-semibold">Observaciones</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary align-items-start pt-3">
+                  <i class="bi bi-clipboard2-pulse"></i>
+                </span>
+                <textarea class="form-control bg-dark text-light border-secondary" id="observaciones" name="observaciones" rows="3">{{ registro['observaciones'] }}</textarea>
+              </div>
+            </div>
+
+            <div class="col-12 d-flex align-items-end">
+              <div class="w-100">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <a href="{{ url_for('vacunacion_list') }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                  </a>
+                  <button type="submit" class="btn btn-warning btn-lg text-dark fw-bold">
+                    <i class="bi bi-check-circle-fill me-2"></i>Actualizar Registro
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

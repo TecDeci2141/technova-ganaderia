@@ -1,0 +1,63 @@
+{% extends "base.html" %} 
+{% block title %}Editar Medicamento{% endblock %} 
+
+{% block content %}
+<div class="container py-4 animate-fade-in">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="glass-card p-4 p-md-5">
+        <h2 class="mb-4 fw-bold text-center">
+          <i class="bi bi-pencil-square text-warning me-2"></i> Editar Medicamento
+        </h2>
+
+        <form method="POST" action="{{ url_for('medicamentos_update', id=med['id']) }}">
+          <div class="row g-4">
+            <div class="col-12">
+              <label for="nombre" class="form-label fw-semibold">Nombre Comercial / del Medicamento *</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-tag-fill"></i>
+                </span>
+                <input type="text" class="form-control bg-dark text-light border-secondary" id="nombre" name="nombre" value="{{ med['nombre'] }}" required>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="ingrediente_activo" class="form-label fw-semibold">Ingrediente Activo</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                  <i class="bi bi-asterisk"></i>
+                </span>
+                <input type="text" class="form-control bg-dark text-light border-secondary" id="ingrediente_activo" name="ingrediente_activo" value="{{ med['ingrediente_activo'] }}">
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label for="uso" class="form-label fw-semibold">Uso / Indicación</label>
+              <div class="input-group">
+                <span class="input-group-text bg-dark border-secondary text-secondary align-items-start pt-3">
+                  <i class="bi bi-clipboard2-pulse"></i>
+                </span>
+                <textarea class="form-control bg-dark text-light border-secondary" id="uso" name="uso" rows="3">{{ med['uso'] }}</textarea>
+              </div>
+            </div>
+
+            <div class="col-12 d-flex align-items-end">
+              <div class="w-100">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <a href="{{ url_for('medicamentos_list') }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                  </a>
+                  <button type="submit" class="btn btn-warning btn-lg text-dark fw-bold">
+                    <i class="bi bi-check-circle-fill me-2"></i>Actualizar Registro
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

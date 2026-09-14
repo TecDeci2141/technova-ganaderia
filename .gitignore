@@ -1,0 +1,30 @@
+# Base de datos (no subir datos reales)
+*.db
+*.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# VS Code
+.vscode/
+.idea/
+
+# Variables de entorno
+.env
+.env.local
+
+# Logs
+*.log
