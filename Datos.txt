@@ -1,0 +1,124 @@
+USE ganado_db;
+
+-- ================= USUARIOS =================
+-- Las contraseñas son hashes de ejemplo para probar el sistema.
+-- Reemplázalos por hashes generados con Werkzeug antes de usar Flask.
+INSERT INTO usuarios (username, password, nombre_completo) VALUES
+('admin', 'HASH_PENDIENTE_1', 'Administrador del Sistema'),
+('diego', 'HASH_PENDIENTE_2', 'Diego Hernández'),
+('juan.perez', 'HASH_PENDIENTE_3', 'Juan Pérez García'),
+('maria.lopez', 'HASH_PENDIENTE_4', 'María López Sánchez'),
+('carlos.ruiz', 'HASH_PENDIENTE_5', 'Carlos Ruiz Gómez'),
+('ana.torres', 'HASH_PENDIENTE_6', 'Ana Torres Díaz'),
+('pedro.mora', 'HASH_PENDIENTE_7', 'Pedro Mora Flores'),
+('lucia.cruz', 'HASH_PENDIENTE_8', 'Lucía Cruz Ramírez'),
+('jose.ramos', 'HASH_PENDIENTE_9', 'José Ramos Silva'),
+('elena.vargas', 'HASH_PENDIENTE_10', 'Elena Vargas León');
+
+-- ================= VENTAS =================
+INSERT INTO ventas (valor_total, fecha_venta, observaciones) VALUES
+(28500.00, '2026-01-15', 'Venta de bovino para engorda'),
+(32400.00, '2026-01-22', 'Venta de novillos'),
+(41750.00, '2026-02-05', 'Lote de ganado comercial'),
+(29800.00, '2026-02-12', 'Venta de bovinos'),
+(56000.00, '2026-03-01', 'Venta de lote de novillos'),
+(37500.00, '2026-03-14', 'Ganado para sacrificio'),
+(48200.00, '2026-04-03', 'Venta de ganado finalizado'),
+(26500.00, '2026-04-19', 'Venta de becerros'),
+(63500.00, '2026-05-08', 'Lote de ganado terminado'),
+(44200.00, '2026-05-21', 'Venta de bovinos comerciales');
+
+-- ================= POTREROS =================
+INSERT INTO potreros (nombre, corral_count, capacidad_por_corral, observaciones) VALUES
+('Potrero Norte', 4, 25, 'Pastoreo rotacional'),
+('Potrero Sur', 3, 30, 'Pasto establecido'),
+('Potrero El Roble', 5, 20, 'Área de engorda'),
+('Potrero La Esperanza', 4, 18, 'Pastoreo de novillas'),
+('Potrero San José', 3, 22, 'Área de adaptación'),
+('Potrero El Encino', 6, 20, 'Pastoreo mixto'),
+('Potrero Las Palmas', 4, 25, 'Disponibilidad de sombra'),
+('Potrero El Mezquite', 3, 15, 'Área de recuperación'),
+('Potrero La Loma', 5, 20, 'Pastoreo controlado'),
+('Potrero Los Sauces', 4, 24, 'Acceso a bebedero');
+
+-- ================= GANADO =================
+INSERT INTO ganado
+(arete, sexo, raza, fecha_ingreso, edad_meses, peso_inicial_kg,
+ peso_actual_kg, proveedor, potrero_actual, alimentacion,
+ destino_carne, estado, peso_canal, precio_venta, valor_total, fecha_venta)
+VALUES
+('MX001', 'Macho', 'Brangus', '2025-08-10', 18, 280, 420, 'Ganadera El Roble', 'Potrero Norte', 'Pasto y suplemento', 'Engorda', 'En Engorda', NULL, NULL, NULL, NULL),
+('MX002', 'Macho', 'Angus', '2025-09-05', 16, 250, 390, 'Rancho San José', 'Potrero Sur', 'Pasto y concentrado', 'Engorda', 'En Engorda', NULL, NULL, NULL, NULL),
+('MX003', 'Hembra', 'Brahman', '2025-07-18', 20, 300, 450, 'Ganadera del Centro', 'Potrero El Roble', 'Pastoreo y minerales', 'Reproducción', 'En Engorda', NULL, NULL, NULL, NULL),
+('MX004', 'Macho', 'Charolais', '2025-10-12', 15, 240, 365, 'Rancho La Esperanza', 'Potrero La Esperanza', 'Pasto y suplemento', 'Engorda', 'En Engorda', NULL, NULL, NULL, NULL),
+('MX005', 'Macho', 'Simmental', '2025-06-20', 22, 320, 510, 'Ganadera El Encino', 'Potrero San José', 'Concentrado y forraje', 'Carne', 'Listo para Venta', NULL, 95.00, 48450.00, NULL),
+('MX006', 'Hembra', 'Suizo Europeo', '2025-11-03', 14, 220, 330, 'Rancho Las Palmas', 'Potrero El Encino', 'Pasto y sales minerales', 'Reproducción', 'En Engorda', NULL, NULL, NULL, NULL),
+('MX007', 'Macho', 'Hereford', '2025-08-27', 17, 270, 410, 'Ganadera del Norte', 'Potrero Las Palmas', 'Pasto y concentrado', 'Carne', 'En Engorda', NULL, NULL, NULL, NULL),
+('MX008', 'Macho', 'Brangus', '2025-05-15', 24, 350, 540, 'Rancho El Mezquite', 'Potrero El Mezquite', 'Dieta de finalización', 'Carne', 'Vendido', 300, 100.00, 54000.00, '2026-05-10'),
+('MX009', 'Hembra', 'Brahman', '2025-12-01', 13, 200, 305, 'Ganadera La Loma', 'Potrero La Loma', 'Pastoreo y minerales', 'Reproducción', 'En Engorda', NULL, NULL, NULL, NULL),
+('MX010', 'Macho', 'Angus', '2025-09-19', 16, 260, 400, 'Rancho Los Sauces', 'Potrero Los Sauces', 'Pasto y suplemento', 'Carne', 'Listo para Venta', NULL, 98.00, 39200.00, NULL);
+
+-- ================= HISTORIAL DE PESO =================
+INSERT INTO historial_peso (arete, fecha_medicion, peso_kg, incremento_kg) VALUES
+('MX001', '2026-01-10', 350, 70),
+('MX002', '2026-01-12', 320, 70),
+('MX003', '2026-01-15', 380, 80),
+('MX004', '2026-01-18', 300, 60),
+('MX005', '2026-01-20', 450, 80),
+('MX006', '2026-01-22', 280, 60),
+('MX007', '2026-01-25', 350, 80),
+('MX008', '2026-01-28', 480, 80),
+('MX009', '2026-02-01', 260, 60),
+('MX010', '2026-02-04', 340, 60);
+
+-- ================= MEDICAMENTOS =================
+INSERT INTO medicamentos (nombre, ingrediente_activo, uso) VALUES
+('CattleMaster 4+L5', 'Antígenos vacunales múltiples', 'Prevención de enfermedades reproductivas y respiratorias bovinas'),
+('Bovilis Vista 5 L5', 'Antígenos vacunales múltiples', 'Prevención de enfermedades reproductivas y leptospirosis'),
+('Ivomec', 'Ivermectina', 'Control de parásitos susceptibles'),
+('Cydectin', 'Moxidectina', 'Control de parásitos susceptibles'),
+('Excenel RTU EZ', 'Ceftiofur', 'Antimicrobiano veterinario bajo prescripción'),
+('Banamine', 'Flunixina meglumina', 'Antiinflamatorio y analgésico veterinario'),
+('Baytril 100', 'Enrofloxacina', 'Antimicrobiano veterinario bajo prescripción'),
+('Vitaminas ADE', 'Vitaminas A, D3 y E', 'Suplementación vitamínica cuando está indicada'),
+('Electrolitos Bovinos', 'Sales y electrolitos', 'Apoyo a la hidratación'),
+('Vacuna clostridial 7 vías', 'Antígenos clostridiales', 'Prevención de enfermedades clostridiales');
+
+-- ================= VACUNACIÓN =================
+INSERT INTO vacunacion (arete, medicamento_id, fecha, dosis, observaciones) VALUES
+('MX001', 10, '2026-01-10', 'Según etiqueta', 'Aplicación registrada'),
+('MX002', 10, '2026-01-11', 'Según etiqueta', 'Aplicación registrada'),
+('MX003', 1, '2026-01-12', 'Según etiqueta', 'Plan sanitario del hato'),
+('MX004', 2, '2026-01-13', 'Según etiqueta', 'Aplicación registrada'),
+('MX005', 10, '2026-01-14', 'Según etiqueta', 'Refuerzo sujeto al calendario sanitario'),
+('MX006', 1, '2026-01-15', 'Según etiqueta', 'Plan sanitario del hato'),
+('MX007', 2, '2026-01-16', 'Según etiqueta', 'Aplicación registrada'),
+('MX008', 10, '2026-01-17', 'Según etiqueta', 'Registro histórico'),
+('MX009', 1, '2026-01-18', 'Según etiqueta', 'Plan sanitario del hato'),
+('MX010', 2, '2026-01-19', 'Según etiqueta', 'Aplicación registrada');
+
+-- ================= INVENTARIO =================
+INSERT INTO inventario (ingredientes, cantidad) VALUES
+('Maíz molido', 1250.00),
+('Sorgo molido', 850.00),
+('Pasta de soya', 600.00),
+('Sal mineralizada para bovinos', 180.00),
+('Melaza', 450.00),
+('Heno de alfalfa', 900.00),
+('Rastrojo de maíz', 1500.00),
+('Harina de canola', 320.00),
+('Carbonato de calcio', 120.00),
+('Premezcla mineral bovina', 95.00);
+
+-- ================= PREMEZCLAS =================
+INSERT INTO premezclas (nombre, ingredientes, cantidad, unidad, observaciones) VALUES
+('Premezcla mineral básica', 'Calcio, fósforo, sodio y microminerales', 100, 'kg', 'Fórmula comercial; verificar etiqueta'),
+('Premezcla de engorda', 'Vitaminas y minerales para bovinos de engorda', 80, 'kg', 'Uso según formulación nutricional'),
+('Premezcla de crecimiento', 'Vitaminas y microminerales', 60, 'kg', 'Para animales en crecimiento'),
+('Premezcla de finalización', 'Minerales y vitaminas', 75, 'kg', 'Integrar conforme a la ración'),
+('Premezcla con selenio', 'Minerales con selenio', 25, 'kg', 'Controlar el aporte total de selenio'),
+('Premezcla para vacas', 'Calcio, fósforo y microminerales', 50, 'kg', 'Ajustar según etapa productiva'),
+('Premezcla proteica', 'Fuentes proteicas y minerales', 90, 'kg', 'Requiere balance de proteína'),
+('Premezcla energética', 'Ingredientes energéticos y minerales', 70, 'kg', 'Evaluar energía de la ración'),
+('Premezcla de sales minerales', 'Sodio, calcio y fósforo', 110, 'kg', 'Mantener disponible según manejo'),
+('Premezcla vitamínica', 'Vitaminas A, D3 y E', 30, 'kg', 'Respetar dosis y ficha técnica');
